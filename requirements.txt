@@ -1,0 +1,7 @@
+flask==2.0.1
+flask-cors==3.0.10
+langchain==0.0.352
+langchain-ollama==0.0.1
+langchain-core==0.1.17
+gtts==2.3.2
+requests==2.31.0
