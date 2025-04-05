@@ -3,8 +3,9 @@ import axios from "axios";
 
 const StoryForm = ({ onSubmit }) => {
   const [situation, setSituation] = useState("");
+  const [scenario, setScenario] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [story, setStory] = useState("");
+  const [story, setStory] = useState([]);
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -25,6 +26,10 @@ const StoryForm = ({ onSubmit }) => {
       
       if (data.success) {
         setStory(data.story);
+        setScenario(data.scene_descriptions);
+        console.log(data.story);
+        console.log("descp------\n", data.scene_descriptions);
+        
       } else {
         setError(data.message || "Failed to generate story");
       }
@@ -38,7 +43,7 @@ const StoryForm = ({ onSubmit }) => {
 
   return (
     <div className="max-w-2xl mx-auto mt-10">
-      {!story ? (
+      {!story.length ? (
         <form
           onSubmit={handleSubmit}
           className="bg-gradient-to-br from-indigo-900/90 to-purple-900/90 p-8 rounded-3xl shadow-xl backdrop-blur-lg border border-white/10"
@@ -77,15 +82,44 @@ const StoryForm = ({ onSubmit }) => {
       ) : (
         <div className="bg-gradient-to-br from-indigo-900/90 to-purple-900/90 p-8 rounded-3xl shadow-xl backdrop-blur-lg border border-white/10">
           <h2 className="text-2xl font-semibold text-white mb-4">Your Journey</h2>
-          <div className="bg-white/10 p-6 rounded-xl text-white/90 leading-relaxed whitespace-pre-line">
-            {story}
+          
+          <div className="space-y-8 mb-6">
+            {story.map((chapter, index) => (
+              <div key={index} className="bg-white/10 p-6 rounded-xl text-white/90">
+                <div className="mb-4">
+                  <h3 className="text-xl font-medium text-white">{chapter.title}</h3>
+                  <p className="text-white/70 text-sm mt-1">{chapter.context}</p>
+                </div>
+                
+                <p className="leading-relaxed mb-4">{chapter.description}</p>
+                
+                {scenario && scenario[index] && (
+                  <div className="mt-6 bg-white/5 p-4 rounded-lg border border-white/10">
+                    <p className="italic text-white/80 mb-4">{scenario[index].scene_description}</p>
+                    
+                    {scenario[index].dialogue && scenario[index].dialogue.length > 0 && (
+                      <div className="space-y-2 mt-3">
+                        {scenario[index].dialogue.map((dialog, dIdx) => (
+                          <div key={dIdx} className="flex">
+                            <span className="font-medium mr-2">{dialog.character}:</span>
+                            <span className="text-white/80">"{dialog.line}"</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
+          
           <button
             onClick={() => {
-              setStory("");
+              setStory([]);
+              setScenario([]);
               setSituation("");
             }}
-            className="mt-6 bg-white/20 text-white font-medium py-2 px-4 rounded-xl hover:bg-white/30 transition-all"
+            className="mt-4 bg-white/20 text-white font-medium py-2 px-4 rounded-xl hover:bg-white/30 transition-all"
           >
             Create Another Story
           </button>

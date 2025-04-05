@@ -2,9 +2,10 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from llm import call_mistral
+from generator import generate_chapters, generate_scene_description
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS to allow frontend to make requests
+CORS(app) 
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
@@ -25,12 +26,18 @@ def generate_story():
     user_query = data['query']
     
     # Generate story using the Mistral model
-    story = call_mistral(user_query)
-    
+    story = generate_chapters(user_query)
+
+    scene_descriptions = []
+    for chapter in story:
+        scene_description = generate_scene_description(chapter)
+        scene_descriptions.append(scene_description)
+
     response = {
         "success": True,
         "message": "Story generated successfully",
-        "story": story
+        "story": story,
+        "scene_descriptions": scene_descriptions
     }
     
     return jsonify(response)
