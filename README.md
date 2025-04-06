@@ -1,12 +1,43 @@
-# React + Vite
+# Journey - A New Beginning
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project combines React frontend with AI capabilities.
 
-Currently, two official plugins are available:
+## Image Generation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+For image generation using Stable Diffusion, use the following Google Colab link:
+- [Stable Diffusion Image Generation](https://colab.research.google.com/drive/1NqXO83_tATvxKYmzlHUYZ2PnGPnpNvS7?usp=sharing)
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Install [Ollama](https://ollama.com/) and Mistral-7B model
+- Run `ollama pull mistral:7b` to download the model
+
+## Setup Instructions
+
+1. Install Python dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+2. Install JavaScript dependencies:
+```bash
+npm install
+```
+
+## Running the Application
+
+1. Start Ollama service:
+```bash
+ollama serve
+```
+
+2. Start the backend server:
+```bash
+python .\backend\app.py
+```
+
+3. Start the frontend development server:
+```bash
+npm run dev
+```
+
