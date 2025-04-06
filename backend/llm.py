@@ -4,7 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 def call_mistral(query: str, sys_promt: str) -> str:
     try:
-        print(f"Received query: {query}")
+        # print(f"Received query: {query}")
         prompt = ChatPromptTemplate.from_template(
             f"""[INST] <<SYS>>
             {sys_promt}

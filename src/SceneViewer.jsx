@@ -8,21 +8,16 @@ const SceneViewer = ({ scenes, mediaResults }) => {
   const [audioPlaying, setAudioPlaying] = useState(false);
   const audioRef = useRef(new Audio());
   
-  // Helper to get absolute URL for assets
   const getAbsoluteUrl = (relativePath) => {
-    // Base URL of the backend server
     const baseUrl = 'http://localhost:5000';
     
-    // If the path already starts with http, it's already absolute
     if (relativePath && relativePath.startsWith('http')) {
       return relativePath;
     }
     
-    // Otherwise join with the base URL
     return relativePath ? `${baseUrl}${relativePath}` : '';
   };
 
-  // Prepare audio queue for current scene when scene changes
   useEffect(() => {
     if (!scenes || !mediaResults || scenes.length === 0 || mediaResults.length === 0) return;
     
@@ -31,7 +26,6 @@ const SceneViewer = ({ scenes, mediaResults }) => {
     
     if (!scene || !media) return;
     
-    // Build audio queue: first narration, then dialogues
     const queue = [];
     
     if (media.narration_path) {
@@ -60,13 +54,11 @@ const SceneViewer = ({ scenes, mediaResults }) => {
     
   }, [currentSceneIndex, scenes, mediaResults]);
 
-  // Handle audio playback
   useEffect(() => {
     if (!isPlaying || audioQueue.length === 0) return;
     
     const playCurrentAudio = () => {
       if (currentAudioIndex >= audioQueue.length) {
-        // Move to next scene if we've played all audio for this scene
         if (currentSceneIndex < scenes.length - 1) {
           setCurrentSceneIndex(prev => prev + 1);
         } else {
@@ -79,7 +71,6 @@ const SceneViewer = ({ scenes, mediaResults }) => {
       audioRef.current.src = currentAudio.path;
       audioRef.current.play().catch(err => {
         console.error("Audio playback error:", err);
-        // Move to next audio if this one fails
         setCurrentAudioIndex(prev => prev + 1);
       });
       setAudioPlaying(true);
@@ -87,7 +78,6 @@ const SceneViewer = ({ scenes, mediaResults }) => {
     
     playCurrentAudio();
     
-    // Set up event listener for when audio ends
     const handleAudioEnd = () => {
       setAudioPlaying(false);
       setCurrentAudioIndex(prev => prev + 1);
@@ -101,7 +91,6 @@ const SceneViewer = ({ scenes, mediaResults }) => {
     };
   }, [isPlaying, currentAudioIndex, audioQueue, currentSceneIndex, scenes]);
   
-  // Trigger next audio when current one finishes
   useEffect(() => {
     if (isPlaying && !audioPlaying && audioQueue.length > 0 && currentAudioIndex < audioQueue.length) {
       const timer = setTimeout(() => {
@@ -109,11 +98,10 @@ const SceneViewer = ({ scenes, mediaResults }) => {
         audioRef.current.src = currentAudio.path;
         audioRef.current.play().catch(err => {
           console.error("Audio playback error:", err);
-          // Move to next audio if this one fails
           setCurrentAudioIndex(prev => prev + 1);
         });
         setAudioPlaying(true);
-      }, 500); // Small delay between audio clips
+      }, 500); 
       
       return () => clearTimeout(timer);
     }
@@ -170,14 +158,21 @@ const SceneViewer = ({ scenes, mediaResults }) => {
   const currentAudio = getCurrentAudioInfo();
   
   return (
-    <div className="w-full max-w-4xl mx-auto bg-gradient-to-br from-slate-900/90 to-slate-800/90 rounded-3xl shadow-2xl overflow-hidden border border-white/10">
+    <div className="w-full max-w-5xl mx-auto bg-gradient-to-br from-slate-900/90 to-slate-800/90 rounded-3xl shadow-2xl overflow-hidden border border-white/10">
       {/* Scene display area */}
-      <div className="relative w-full h-[400px] overflow-hidden">
+      <div className="relative w-full h-[500px] overflow-hidden">
         {/* Background image */}
         {currentMedia.image_path ? (
           <div 
             className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-            style={{ backgroundImage: `url(${getAbsoluteUrl(currentMedia.image_path)})` }}
+            style={{ 
+              backgroundImage: `url(${getAbsoluteUrl(currentMedia.image_path)})`,
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              height: '100%',
+              width: '100%'
+            }}
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-b from-indigo-900 to-slate-900 flex items-center justify-center">
@@ -297,7 +292,7 @@ const SceneViewer = ({ scenes, mediaResults }) => {
             >
               {mediaResults[idx]?.image_path ? (
                 <div 
-                  className="w-full h-full bg-cover bg-center"
+                  className="w-full h-full bg-contain bg-no-repeat bg-center"
                   style={{ backgroundImage: `url(${getAbsoluteUrl(mediaResults[idx].image_path)})` }}
                 />
               ) : (

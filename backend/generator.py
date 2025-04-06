@@ -21,6 +21,8 @@ Guidelines:
 """
 
   story = call_mistral(query, MISTRAL_SYSTEM_INSTRUCTION)
+
+  # print(story)
     
   try:
       story_json = json.loads(story)
@@ -74,6 +76,9 @@ Context: {chapter['context']}
 """
 
   scene = call_mistral(chapter_text, SCENE_RENDER_SYSTEM_PROMPT)
+
+  # print("Scene JSON:")
+  # print(scene)
 
   try:
       scene_json = json.loads(scene)
